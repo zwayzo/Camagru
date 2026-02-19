@@ -1,39 +1,36 @@
 <?php
-
 require_once "../src/errors.php"; // adjust path as needed
-
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+session_start(); // Make sure session is started
+
 if (!isset($_GET["token"])) {
     die("No token provided");
 }
+
 if (isset($_SESSION["reset_error"])) {
     echo "<p style='color:red'>" . $_SESSION["reset_error"] . "</p>";
     unset($_SESSION["reset_error"]);
 }
+
 $token = $_GET["token"];
 $token_hash = hash("sha256", $token);
 
-$mysqli = require "../config/config.php";
+// PDO connection
+$pdo = require '../config/database.php';
 
-$sql = "SELECT * FROM users WHERE reset_token = ?";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("s", $token_hash);
-$stmt->execute();
-
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-
+$stmt = $pdo->prepare("SELECT * FROM users WHERE reset_token = ?");
+$stmt->execute([$token_hash]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user == null){
-    die("token not found");
+    die("Token not found");
 }
 
 if (strtotime($user["token_expiry"]) <= time()){
-    die("token has expired");
+    die("Token has expired");
 }
 ?>
 
@@ -47,7 +44,7 @@ if (strtotime($user["token_expiry"]) <= time()){
     <h1>Reset Password</h1>
 
     <form method="post" action="process-reset-password.php">
-        <?= showError($errors['reset_error']); ?>
+        <?= showError($errors['reset_error'] ?? null); ?>
         <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
         <label for="password">New password</label>

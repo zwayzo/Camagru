@@ -1,14 +1,5 @@
 <?php
-// echo "<pre>";
-// print_r($_POST);
-// exit();
-
-
-
 session_start();
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL);
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -18,93 +9,66 @@ if (!isset($_POST["token"])) {
     exit();
 }
 
-
-
 $token = $_POST["token"];
-
 $token_hash = hash("sha256", $token);
-$mysqli = require "../config/config.php";
-
-
+$pdo = require '../config/database.php'; // PDO instance
 
 $password = $_POST["password"];
 $password_confirmation = $_POST["password_confirmation"];
 
 if ($password !== $password_confirmation) {
     $_SESSION["reset_error"] = "Passwords do not match.";
-    // die("Passwords do not match");
     header("Location: reset-password.php?token=" . urlencode($token));
     exit();
 }
 
-// var_dump($password);
-// exit();
+// Fetch user by reset token
+$stmt = $pdo->prepare("SELECT * FROM users WHERE reset_token = ?");
+$stmt->execute([$token_hash]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-$sql = "SELECT * FROM users WHERE reset_token = ?";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("s", $token_hash);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-
-if (!$user){
+if (!$user) {
     $_SESSION["reset_error"] = "Invalid token.";
     header("Location: ../public/index.php");
     exit();
 }
 
-if (strtotime($user["token_expiry"]) <= time()){
+if (strtotime($user["token_expiry"]) <= time()) {
     $_SESSION["reset_error"] = "Token expired.";
     header("Location: ../public/index.php");
     exit();
 }
 
-# Password validation
-if (!preg_match('/[@#$%!]/', $password)){
-    // var_dump($password);
-    // die();
-    // exit();
+// Password validation
+if (!preg_match('/[@#$%!]/', $password)) {
     $_SESSION["reset_error"] = "Password must contain a special character.";
     header("Location: reset-password.php?token=" . urlencode($token));
     exit();
 }
 
-if (!preg_match('/[A-Z]/', $password)){
-    // die("Passwords A");
-    // exit();
+if (!preg_match('/[A-Z]/', $password)) {
     $_SESSION["reset_error"] = "Password must contain an uppercase letter.";
     header("Location: reset-password.php?token=" . urlencode($token));
     exit();
 }
 
-if (strlen($password) < 8){
-    // die("Passwords 8");
-    // exit();
+if (strlen($password) < 8) {
     $_SESSION["reset_error"] = "Password must be at least 8 characters.";
     header("Location: reset-password.php?token=" . urlencode($token));
     exit();
 }
 
+// Hash the new password
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-
-$sql = "UPDATE users
-        SET password = ?,
-            reset_token = NULL,
-            token_expiry = NULL
-        WHERE id = ?";
-
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("si", $password_hash, $user["id"]);
-$stmt->execute();
+// Update password and clear token
+$stmt = $pdo->prepare("
+    UPDATE users
+    SET password = ?, reset_token = NULL, token_expiry = NULL
+    WHERE id = ?
+");
+$stmt->execute([$password_hash, $user["id"]]);
 
 $_SESSION["reset_success"] = "Password successfully reset.";
 header("Location: ../public/index.php");
-echo "passwor updated succefly";
-
 exit();
-
-
-?>

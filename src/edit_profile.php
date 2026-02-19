@@ -2,76 +2,43 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 
 $username = $_SESSION['username'];
 
-// var_dump($username);
-// exit();
+// Connect via PDO
+$pdo = require '../config/database.php';
 
-
-$mysqli = require "../config/config.php";
-
+// Get user by username
 $sql = "SELECT * FROM users WHERE username = ?";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("s", $username);
-$stmt->execute();
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$username]);
+$user = $stmt->fetch();
 
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-// $id = $user['id'];
-
-// var_dump($id);
-// exit();
-
+// New values from form
 $new_username = trim($_POST['username'] ?? '');
 $new_email = trim($_POST['email'] ?? '');
 $new_password = trim($_POST['password'] ?? '');
 
-// var_dump($new_email);
-// var_dump($new_username);
-// var_dump($new_password);
-// exit();
+// Update username
 if ($new_username !== '') {
-    $update = $mysqli->prepare("UPDATE users SET username = ? WHERE id = ?");
-    $update->bind_param("si", $new_username, $user['id']);
-    $update->execute();
+    $update = $pdo->prepare("UPDATE users SET username = ? WHERE id = ?");
+    $update->execute([$new_username, $user['id']]);
+}
 
-} 
-
+// Update email
 if ($new_email !== '') {
-    $update = $mysqli->prepare("UPDATE users SET email = ? WHERE id = ?");
-    $update->bind_param("si", $new_email, $user['id']);
-    $update->execute();
+    $update = $pdo->prepare("UPDATE users SET email = ? WHERE id = ?");
+    $update->execute([$new_email, $user['id']]);
+}
 
-} 
-
-
-
+// Update password
 if ($new_password !== '') {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $update = $mysqli->prepare("UPDATE users SET password = ? WHERE id = ?");
-    $update->bind_param("si", $password, $user['id']);
-    $update->execute();
+    $update = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $update->execute([$password, $user['id']]);
+}
 
-} 
-
-
+// Redirect back with success message
 header("Location: user_page.php");
 $_SESSION['succes'] = "Profile updated";
 exit();
-
-
-
-
-
-// var_dump($user);
-// exit();
-
-
-
-
-
-
-?>

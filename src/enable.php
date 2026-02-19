@@ -1,16 +1,12 @@
 <?php
 session_start();
 
-// var_dump("d");
-// exit();
-
-
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$mysqli = require "../config/config.php";
+// Connect using PDO
+$pdo = require '../config/database.php';
 
 if (!isset($_SESSION['user_id'])) {
     die("You must be logged in to like an image.");
@@ -18,33 +14,23 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Fetch user
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $mysqli->prepare("SELECT * FROM users 
-                        WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-// $stmt->store_result();
-$stmt->close();
+if (!$user) {
+    die("User not found.");
+}
 
-
-// var_dump($user[enable]);
-// exit();
-
+// Toggle enable
 $new_enable = ($user['enable'] == 1) ? 0 : 1;
 
-// update in DB
-$stmt = $mysqli->prepare("UPDATE users SET enable = ? WHERE id = ?");
-$stmt->bind_param("ii", $new_enable, $user_id);
-$stmt->execute();
-$stmt->close();
+// Update in DB
+$stmt = $pdo->prepare("UPDATE users SET enable = ? WHERE id = ?");
+$stmt->execute([$new_enable, $user_id]);
 
-// optional: redirect back
+// Optional: redirect back
 header("Location: user_page.php");
 exit();
-
-
-
-
-
 ?>

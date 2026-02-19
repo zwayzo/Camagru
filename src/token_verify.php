@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL);
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -15,19 +11,15 @@ if (!isset($_GET["token"])) {
 }
 
 $token = $_GET["token"];
-
-// var_dump($token);
-// exit();
-
 $token_hash = hash("sha256", $token);
-$mysqli = require "../config/config.php";
 
-$sql = "SELECT * FROM users WHERE mail_token = ?";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("s", $token_hash);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+// PDO connection
+$pdo = require '../config/database.php';
+
+// 1️⃣ Fetch the user by token
+$stmt = $pdo->prepare("SELECT * FROM users WHERE mail_token = ?");
+$stmt->execute([$token_hash]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user){
     $_SESSION["reset_error"] = "Invalid token.";
@@ -35,27 +27,18 @@ if (!$user){
     exit();
 }
 
+// 2️⃣ Check token expiry
 if (strtotime($user["token_expiry"]) <= time()){
     $_SESSION["reset_error"] = "Token expired.";
     header("Location: ../public/index.php");
     exit();
 }
 
-$update = $mysqli->prepare("UPDATE users SET is_verified = 1 WHERE id = ?");
-$update->bind_param("i", $user['id']);
-$update->execute();
-
-
-
-
+// 3️⃣ Mark email as verified
+$update = $pdo->prepare("UPDATE users SET is_verified = 1 WHERE id = ?");
+$update->execute([$user['id']]);
 
 $_SESSION['email_verified'] = "Email has been Verified";
 header("Location: ../public/index.php");
-
-
 exit();
-
-
-
-
 ?>

@@ -1,5 +1,5 @@
-console.log("js ")
-
+// console.log("js ")
+let isCaptured = false;
 
 
 
@@ -78,72 +78,188 @@ function toggleCommentsSection(imageId) {
 }
 
 
-// Grab DOM elements
-const fileInput = document.getElementById("file-input");
-const uploadBtn = document.getElementById("upload-btn");
-const canvasContainer = document.getElementById("canvas-container");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-const stickersPanel = document.getElementById("stickers-panel");
-const saveBtn = document.getElementById("save-btn");
-const saveSection = document.getElementById("save-section");
+document.addEventListener("DOMContentLoaded", () => {
 
-let baseImage = new Image();
-let currentSticker = null;
+    const fileInput = document.getElementById("file-input");
+    const uploadBtn = document.getElementById("upload-btn");
+    const canvasContainer = document.getElementById("canvas-container");
+    const canvas = document.getElementById("canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const saveBtn = document.getElementById("save-btn");
+    const webcamVideo = document.getElementById("webcam");
+    const captureBtn = document.getElementById("capture-btn");
+    const form = document.getElementById("save-form");
+    const imageInput = document.getElementById("imageDataInput");
 
-// Upload button triggers file input
-uploadBtn.addEventListener("click", () => fileInput.click());
+    let baseImage = new Image();
+    let stickers = [];
 
-// When user selects image
-fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    // =============================
+    // REDRAW CANVAS
+    // =============================
+    function redrawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        baseImage.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-});
+        if (baseImage.src) {
+            ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+        }
 
-// Draw image on canvas when loaded
-baseImage.onload = function() {
-    canvas.width = baseImage.width;
-    canvas.height = baseImage.height;
-    ctx.drawImage(baseImage, 0, 0);
+        stickers.forEach(sticker => {
+            ctx.drawImage(
+                sticker.img,
+                sticker.x,
+                sticker.y,
+                sticker.width,
+                sticker.height
+            );
+        });
+    }
 
-    // Show canvas, stickers, save button
-    canvasContainer.style.display = "block";
-    stickersPanel.style.display = "block";
-    saveSection.style.display = "block";
-};
+    // =============================
+    // RESIZE FUNCTION
+    // =============================
+    function resizeCanvas(img) {
+        const MAX = 600;
+        let width = img.width;
+        let height = img.height;
 
-// Handle sticker clicks
-document.querySelectorAll(".sticker-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const stickerSrc = btn.getAttribute("data-src");
-        currentSticker = new Image();
-        currentSticker.src = stickerSrc;
+        if (width > height && width > MAX) {
+            height *= MAX / width;
+            width = MAX;
+        } else if (height > width && height > MAX) {
+            width *= MAX / height;
+            height = MAX;
+        }
 
-        currentSticker.onload = () => {
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = width;
+        canvas.height = height;
+    }
 
-            // Draw base image
-            ctx.drawImage(baseImage, 0, 0);
+    // =============================
+    // UPLOAD IMAGE
+    // =============================
+    uploadBtn.addEventListener("click", () => fileInput.click());
 
-            // Draw sticker in fixed position (center)
-            const x = canvas.width / 2 - currentSticker.width / 2;
-            const y = canvas.height / 2 - currentSticker.height / 2;
-            ctx.drawImage(currentSticker, x, y);
+    fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            baseImage = new Image();
+            baseImage.src = event.target.result;
+
+            baseImage.onload = () => {
+                resizeCanvas(baseImage);
+                stickers = [];
+                redrawCanvas();
+                canvasContainer.style.display = "block";
+                form.style.display = "block";
+            };
         };
+        reader.readAsDataURL(file);
     });
+
+    // =============================
+    // START WEBCAM
+    // =============================
+    function startWebcam() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                webcamVideo.srcObject = stream;
+                webcamVideo.play();
+                captureBtn.style.display = "inline-block";
+                captureBtn.disabled = false; // IMPORTANT
+            })
+            .catch(err => console.error("Webcam error:", err));
+    }
+
+    startWebcam();
+
+    // =============================
+    // CAPTURE
+    // =============================
+    if (captureBtn){
+        captureBtn.addEventListener("click", () => {
+            if (!webcamVideo.videoWidth) return;
+
+            canvas.width = webcamVideo.videoWidth;
+            canvas.height = webcamVideo.videoHeight;
+
+            ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+
+            baseImage = new Image();
+            baseImage.src = canvas.toDataURL("image/png");
+
+            baseImage.onload = () => {
+                stickers = [];
+                redrawCanvas();
+            };
+
+            canvasContainer.style.display = "block";
+            form.style.display = "block";
+        });
+    }
+
+    // =============================
+    // ADD STICKERS (MULTIPLE)
+    // =============================
+    const stickerElements = document.querySelectorAll("#sticker-gallery img");
+
+    stickerElements.forEach(sticker => {
+        sticker.addEventListener("click", () => {
+    
+            const img = new Image();
+            img.src = sticker.src || sticker.dataset.src;
+    
+            img.onload = () => {
+    
+                const stickerWidth = canvas.width * 0.3;
+                const stickerHeight = img.height * (stickerWidth / img.width);
+    
+                // ✅ Random position inside canvas bounds
+                const x = Math.random() * (canvas.width - stickerWidth);
+                const y = Math.random() * (canvas.height - stickerHeight);
+    
+                // ✅ Add sticker to array (IMPORTANT)
+                stickers.push({
+                    img: img,
+                    x: x,
+                    y: y,
+                    width: stickerWidth,
+                    height: stickerHeight
+                });
+    
+                redrawCanvas();
+    
+                captureBtn.disabled = false;
+                saveBtn.disabled = false;
+            };
+        });
+    });
+    
+
+    // =============================
+    // SAVE BUTTON
+    // =============================
+    saveBtn.addEventListener("click", () => {
+        const imageData = canvas.toDataURL("image/png");
+        console.log("Send this to PHP:", imageData);
+    });
+
+    // =============================
+    // FORM SUBMIT
+    // =============================
+    form.addEventListener("submit", () => {
+        imageInput.value = canvas.toDataURL("image/png");
+    });
+
 });
 
-// Save button (example: sends base64 to backend)
-saveBtn.addEventListener("click", () => {
-    const imageData = canvas.toDataURL("image/png");
-    console.log("Send this to PHP:", imageData);
 
-    // Example: You can use fetch() to send to PHP
-});
+
+function showSaveForm() {
+    const form = document.getElementById("save-form");
+    form.style.display = "block"; // show form
+}

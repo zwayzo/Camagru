@@ -50,6 +50,42 @@ button {
   z-index: 0;
 }
 
+
+.verify-email-btn2 {
+  align-items: center;
+  appearance: none;
+  background-color: #7494ec;
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+  box-sizing: border-box;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  fill: currentcolor;
+  font-family: "Google Sans",Roboto,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: .25px;
+  line-height: normal;
+  max-width: 100%;
+  overflow: visible;
+  padding: 2px 24px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: auto;
+  will-change: transform,opacity;
+  z-index: 0;
+}
+
+
 .verify-email-btn:hover {
   background: #F6F9FE;
   color: #174ea6;
@@ -347,4 +383,84 @@ canvas {
 
 #save-section {
   margin-top: 15px;
+}
+
+
+
+
+.sticker-gallery {
+  display: flex;
+  flex-direction: column; /* vertical stack */
+  align-items: center;    /* center stickers horizontally */
+  gap: 10px;              /* spacing between stickers */
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 100px;           /* fixed width for sidebar */
+}
+
+.sticker-gallery img {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.sticker-gallery img:hover {
+  transform: scale(1.2);
+}
+
+#page-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+
+}
+
+#sticker-gallery {
+  flex-shrink: 0; /* prevent it from shrinking */
+}
+
+#main-section {
+  flex-grow: 1; /* main content takes remaining space */
+}
+
+
+#webcam-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.thumbnails {
+  display: flex;
+  flex-direction: column; /* stack thumbnails vertically */
+  gap: 10px;              /* spacing between images */
+  width: 180px;            /* fixed width for sidebar */
+  flex-shrink: 0;          /* prevent shrinking */
+  align-items: center;      /* center images inside sidebar */
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.thumbnail img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.text-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  
+}
+
+.text-link:hover {
+  text-decoration: underline;
 }

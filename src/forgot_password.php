@@ -11,30 +11,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $token_hash = hash("sha256", $token);
     $expiry = date("Y-m-d H:i:s", time() + 60 * 30);
 
-    // DB connection
-    $mysqli = require "../config/config.php";
+    // DB connection using PDO
+    $pdo = require '../config/database.php';
 
     // 1️⃣ First, get the user's email from username
-    $sql = "SELECT email FROM users WHERE username = ?";
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    $stmt = $pdo->prepare("SELECT email FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // if (!$user) {
-    //     // Optional: do not reveal if username exists for security
-    //     echo "If this username exists, a reset link has been sent.";
-    //     exit();
-    // }
+    if (!$user) {
+        // Optional: do not reveal if username exists for security
+        // We just silently continue
+        header("Location: ../public/index.php");
+        exit();
+    }
 
     $email = $user['email']; // now we have the email
 
     // 2️⃣ Update the reset token and expiry in DB
-    $sql = "UPDATE users SET reset_token = ?, token_expiry = ? WHERE username = ?";
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("sss", $token_hash, $expiry, $username);
-    $stmt->execute();
+    $stmt = $pdo->prepare("UPDATE users SET reset_token = ?, token_expiry = ? WHERE username = ?");
+    $stmt->execute([$token_hash, $expiry, $username]);
 
     // 3️⃣ Send email
     require __DIR__ . "/mailer.php"; // PHPMailer instance
@@ -54,6 +50,8 @@ END;
 
     echo "If this username exists, a reset link has been sent.";
 }
-header("Location: ../public/index.php");
 
+// Redirect back to login page
+header("Location: ../public/index.php");
+exit();
 ?>

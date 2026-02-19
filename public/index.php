@@ -32,7 +32,8 @@ unset($_SESSION['VF']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="./assets/js/script.js"></script> 
+    <link rel="stylesheet" href="assets/css/user.css">
+    <!-- <script src="./assets/js/script.js"></script>  -->
 
 </head>
 
@@ -55,6 +56,7 @@ unset($_SESSION['VF']);
 
                 <p>Don't have an account? <a href="#" onclick="showForm(`register-form`)">Register</a></p>
                 <p>Forget Password? <a href="#" onclick="showMail(); return false;">Send link via email</a></p>
+                <a href="../src/gallerie.php" class="text-link" >View Gallerie</a>
             </form>
 
             <!-- FORGOT PASSWORD FORM (separate form, initially hidden) -->
@@ -80,6 +82,7 @@ unset($_SESSION['VF']);
                 <button type="submit" name="register">Register</button>
 
                 <p>Already have an account? <a href="#" onclick="showForm(`login-form`)">Login</a></p>
+                <a href="../src/gallerie.php" class="text-link" >View Gallerie</a>
             </form>
         </div>
 
