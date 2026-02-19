@@ -464,3 +464,404 @@ canvas {
 .text-link:hover {
   text-decoration: underline;
 }
+
+/* Footer styling */
+#mainFooter {
+    background-color: #222;       /* dark footer */
+    color: #fff;                  /* white text */
+    padding: 20px 0;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-top: 40px;
+    border-top: 1px solid #444;
+}
+
+#mainContent {
+    flex: 1;
+}
+
+/* Footer styling */
+#mainFooter {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    color: #7494ec;
+    padding: 20px 40px;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    z-index: 100;
+}
+
+
+#mainFooter a {
+    color: #7494ec;               /* match accent */
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+#mainFooter a:hover {
+    color: #4a6cc9;               /* slightly darker on hover */
+}
+
+.footer-links {
+    margin-top: 8px;
+}
+
+#page-container {
+    padding-bottom: 80px; /* same height as footer */
+}
+
+
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+    font-family: sans-serif;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background: #f1f1f1;
+    transition: 0.3s;
+}
+
+.pagination a:hover {
+    background: #7494ec;
+    color: white;
+}
+
+.pagination a.active {
+    background: #7494ec;
+    color: white;
+}
+
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+  /* Header: stack logo and buttons vertically */
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 20px;
+    gap: 10px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-actions button,
+  .header-actions .verify-email-btn,
+  .header-actions .verify-email-btn2 {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Gallery: single column on small screens */
+  .gallery {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 16px;
+  }
+
+  /* Modal: full-width on mobile */
+  .modal {
+    width: 90%;
+    padding: 20px;
+  }
+
+  /* Page container: stack sticker sidebar and main content */
+  #page-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 10px 80px;
+  }
+
+  #sticker-gallery {
+    width: 100%;
+  }
+
+  .sticker-gallery {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Thumbnails: horizontal scroll on mobile */
+  .thumbnails {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Canvas: shrink to fit */
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Footer: smaller padding */
+  #mainFooter {
+    padding: 12px 20px;
+    font-size: 12px;
+  }
+
+  /* Comment form inputs */
+  .comments-section input {
+    width: 60%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .gallery {
+    padding: 8px;
+  }
+
+  .image-info {
+    font-size: 12px;
+  }
+
+  .pagination a {
+    padding: 6px 9px;
+    font-size: 13px;
+  }
+}
+
+
+
+/* Fix body layout for non-auth pages */
+body {
+    display: flex; /* Override the flex centering from style.css */
+    min-height: 100vh;
+    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+}
+
+/* Make the main content wrapper fill the screen */
+#mainContent {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+
+.header {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+@media (max-width: 768px) {
+
+    /* Prevent the narrow centered column */
+    body {
+        display: block;
+        padding: 0;
+    }
+
+    .container {
+        width: 100%;
+        margin: 0;
+        padding: 0 10px;
+    }
+
+    /* Header: compact and full-width */
+    .header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 8px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+        flex: 1; /* take available space */
+    }
+
+    .header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .header-actions button,
+    .header-actions .verify-email-btn,
+    .header-actions .verify-email-btn2 {
+        flex: 1 1 auto;
+        min-width: 100px;
+        font-size: 13px;
+        padding: 8px 10px;
+        height: auto;
+    }
+
+    /* Camera/Take-a-pic page layout */
+    #page-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        padding: 10px 10px 80px;
+        gap: 10px;
+    }
+
+    /* Sticker gallery: horizontal strip instead of sidebar */
+    #sticker-gallery {
+        width: 100%;
+    }
+
+    .sticker-gallery {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .sticker-gallery img {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Main section: full width */
+    #main-section {
+        width: 100%;
+    }
+
+    /* Webcam: full width */
+    #webcam-section {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    #webcam-section video,
+    #webcam-section canvas {
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 8px;
+    }
+
+    /* Canvas container */
+    #canvas-container {
+        width: 100%;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Thumbnails: horizontal row */
+    .thumbnails {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        border: none;
+        padding: 5px;
+        justify-content: flex-start;
+    }
+
+    .thumbnail img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Gallery grid: single column */
+    .gallery {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 12px;
+    }
+
+    /* Modal: nearly full screen */
+    .modal {
+        width: 92%;
+        padding: 20px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Buttons in sticker/save section */
+    #stickers-panel button,
+    #save-section button {
+        width: auto;
+        padding: 8px 16px;
+        margin: 4px;
+    }
+
+    /* Comments */
+    .comments-section input {
+        width: 65%;
+    }
+
+    /* Footer */
+    #mainFooter {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header-actions {
+        gap: 5px;
+    }
+
+    .header-actions button,
+    .header-actions .verify-email-btn,
+    .header-actions .verify-email-btn2 {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .gallery {
+        padding: 6px;
+        gap: 10px;
+    }
+
+    .image-info {
+        font-size: 12px;
+    }
+
+    .pagination a {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+
+    .thumbnail img {
+        width: 65px;
+        height: 65px;
+    }
+
+    .sticker-gallery img {
+        width: 40px;
+        height: 40px;
+    }
+}

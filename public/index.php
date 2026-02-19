@@ -95,3 +95,20 @@ unset($_SESSION['VF']);
 
 ?>
 </html>
+
+
+<!-- php -S 127.0.0.1:8000 -->
+<!-- docker run --name camagru-db \
+  -e MYSQL_ROOT_PASSWORD=root123 \
+  -e MYSQL_DATABASE=camagru_db \
+  -p 3307:3306 \
+  -d mariadb:12 -->
+
+<!-- php config/setup.php -->
+
+<!-- docker run --name camagru-pma \
+    -d \
+    --link camagru-db:db \
+    -p 8080:80 \
+    -e PMA_HOST=camagru-db \
+    phpmyadmin/phpmyadmin -->

@@ -13,18 +13,26 @@ function sendEmail($image_id, $pdo, $action, $text) {
 
     if (!$user) {
         // Image not found, just exit
-        header("Location: user_page.php");
+        header("Location: gallerie.php");
         exit();
     }
 
     // If notifications are disabled, redirect
     if ($user['enable'] == 0){
-        header("Location: user_page.php");
+        header("Location: gallerie.php");
         exit();
     }
 
     $current = $_SESSION['user_id'];
     $email = $user['email'];
+    $sql = "SELECT username FROM users WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$current]);
+    $test = $stmt->fetchColumn();
+
+    
+
+    
 
     // Send email
     require __DIR__ . "/mailer.php";
@@ -42,7 +50,7 @@ function sendEmail($image_id, $pdo, $action, $text) {
     } else {
         $mail->Body = <<<END
         Hi,<br>
-        You have a new $action from $current.<br><br><br>
+        You have a new $action from $test.<br><br><br>
         Thanks, The Camagru Team
         END;
     }
@@ -53,7 +61,7 @@ function sendEmail($image_id, $pdo, $action, $text) {
         error_log("Mailer error: {$mail->ErrorInfo}");
     }
 
-    header("Location: user_page.php");
+    header("Location: gallerie.php");
     exit();
 }
 ?>

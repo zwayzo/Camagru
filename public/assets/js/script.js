@@ -42,12 +42,14 @@ function openModal() {
     document.getElementById("editModal").style.display = "block";
     document.getElementById("overlay").style.display = "block";
     document.getElementById("mainContent").classList.add("blur"); // blur only the main content
+    document.getElementById("gallery").classList.add("blur"); // blur only the main content
 }
 
 function closeModal() {
     document.getElementById("editModal").style.display = "none";
     document.getElementById("overlay").style.display = "none";
     document.getElementById("mainContent").classList.remove("blur");
+    document.getElementById("gallery").classList.remove("blur");
 }
 
 
@@ -165,12 +167,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // START WEBCAM
     // =============================
     function startWebcam() {
+        // Feature detection: ensure getUserMedia is available
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.warn("getUserMedia is not supported in this browser.");
+            return;
+        }
+
+        if (!webcamVideo) {
+            console.warn("No #webcam element found in the DOM.");
+            return;
+        }
+
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
-                webcamVideo.srcObject = stream;
-                webcamVideo.play();
-                captureBtn.style.display = "inline-block";
-                captureBtn.disabled = false; // IMPORTANT
+                try {
+                    webcamVideo.srcObject = stream;
+                    // play may return a promise; swallow any play errors
+                    webcamVideo.play().catch(() => {});
+
+                    if (captureBtn) {
+                        captureBtn.style.display = "inline-block";
+                        captureBtn.disabled = false; // IMPORTANT
+                    }
+                } catch (err) {
+                    console.error("Error while setting up webcam stream:", err);
+                }
             })
             .catch(err => console.error("Webcam error:", err));
     }

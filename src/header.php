@@ -39,6 +39,7 @@ GROUP BY images.id
 ORDER BY images.created_at DESC
 ";
 
+
 $stmt = $pdo->query($sql);
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -102,6 +103,19 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <form action="logout.php" method="post">
                         <button type="submit" class="verify-email-btn">Logout</button>
                     </form>
+                    <!-- <div id="overlay" class="overlay"></div>
+                    <div id="editModal" class="modal">
+                        <div class="modal-content">
+                            <h2>Edit Profile</h2>
+                            <form action="edit_profile.php" method="post">
+                                <input type="text" name="username" placeholder="New username">
+                                <input type="email" name="email" placeholder="New email">
+                                <input type="text" name="password" placeholder="New password">
+                                <button type="submit">Save</button>
+                                <button type="button" onclick="closeModal()">Cancel</button>
+                            </form>
+                        </div>
+                    </div> -->
                 <?php endif; ?>
             </div>
         </div>
@@ -109,5 +123,26 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if($successMessage): ?>
             <p id="flash-message" class="success-message"><?= htmlspecialchars($successMessage) ?></p>
         <?php endif; ?>
-
     </div>
+
+    <div id="overlay" class="overlay"></div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Profile</h2>
+            <form action="edit_profile.php" method="post">
+                <input type="text" name="username" placeholder="New username">
+                <input type="email" name="email" placeholder="New email">
+                <input type="password" name="password" placeholder="New password">
+                <button type="submit">Save</button>
+                <button type="button" onclick="closeModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+    <!-- mainContent remains open; page templates should render content here, then close the mainContent div and include the footer -->
+
+
+
+

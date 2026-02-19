@@ -1,6 +1,32 @@
 
 <?php
 include 'header.php';  // <-- this pulls in the header
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 5; // images per page
+$offset = ($page - 1) * $limit;
+
+// Fetch images for current page
+$stmt = $pdo->prepare("
+    SELECT images.*, users.username, 
+           (SELECT COUNT(*) FROM likes WHERE likes.image_id = images.id) AS like_count,
+            (SELECT COUNT(*) FROM comments WHERE comments.image_id = images.id) AS comment_count
+    FROM images
+    JOIN users ON images.user_id = users.id
+    ORDER BY images.created_at DESC
+    LIMIT :limit OFFSET :offset
+");
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$images = $stmt->fetchAll();
+
+// Get total number of images to calculate total pages
+$totalStmt = $pdo->query("SELECT COUNT(*) FROM images");
+$totalImages = $totalStmt->fetchColumn();
+$totalPages = ceil($totalImages / $limit);
+
+// var_dump($images[0]['like_count']);
+// exit();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +36,7 @@ include 'header.php';  // <-- this pulls in the header
     <title>Camagru</title>
     <link rel="stylesheet" href="../public/assets/css/user.css">
     <script src="../public/assets/js/script.js"></script> 
+
 
 </head>
 <body>
@@ -30,6 +57,7 @@ include 'header.php';  // <-- this pulls in the header
                 <div class="actions">
                     <!-- Like Button -->
                     <form class="like-form" method="post" action="like.php">
+                        
                         <input type="hidden" name="image_id" value="<?= $img['id'] ?>">
                         <?php if ($user != null): ?>
                             <button type="submit" class="like-btn">
@@ -57,9 +85,10 @@ include 'header.php';  // <-- this pulls in the header
                 
                 <!-- Comment Section (form + existing comments) -->
                 <div class="comments-section" id="comments-section-<?= $img['id'] ?>" style="display:none;">
+    
                     <!-- Add new comment -->
                     <form method="post" action="comment.php">
-                        <input type="hidden" name="image_id" value="<?= $img['id'] ?>">
+                        <input type="hidden" name="image_id" value="<?= htmlspecialchars($img['id']) ?>">
                         <input type="text" name="comment" placeholder="Add a comment..." required>
                         <button type="submit">Post</button>
                     </form>
@@ -67,25 +96,54 @@ include 'header.php';  // <-- this pulls in the header
                     <!-- Existing comments -->
                     <div class="comments-list">
                         <?php
-                        $comments = $mysqli->query("
+                        $stmt = $pdo->prepare("
                             SELECT c.comment, u.username
                             FROM comments c
                             JOIN users u ON c.user_id = u.id
-                            WHERE c.image_id = {$img['id']}
+                            WHERE c.image_id = ?
                             ORDER BY c.created_at DESC
                         ");
-                        while ($c = $comments->fetch_assoc()):
+                        $stmt->execute([$img['id']]);
+                        $comments = $stmt->fetchAll();
+
+                        if ($comments):
+                            foreach ($comments as $c):
                         ?>
-                            <p><strong><?= htmlspecialchars($c['username']) ?>:</strong>
-                            <?= htmlspecialchars($c['comment']) ?></p>
-                        <?php endwhile; ?>
+                                <p>
+                                    <strong><?= htmlspecialchars($c['username']) ?>:</strong>
+                                    <?= htmlspecialchars($c['comment']) ?>
+                                </p>
+                        <?php
+                            endforeach;
+                        else:
+                        ?>
+                            <p>No comments yet.</p>
+                        <?php endif; ?>
                     </div>
+
                 </div>
             </div>
         <?php endforeach; ?>
-        </div>
     </div>
-        
+    <div class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="?page=<?= $page - 1 ?>">&laquo; Previous</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?= $page + 1 ?>">Next &raquo;</a>
+        <?php endif; ?>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="header">
+            <p>&copy; 2026 Camagru. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

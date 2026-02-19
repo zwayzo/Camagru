@@ -6,6 +6,10 @@ error_reporting(E_ALL);
 
 include 'header.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../public/index.php");
+    exit();
+}
 $userId = $_SESSION['user_id']; // authenticated user ID
 $pdo = require '../config/database.php'; // assuming this returns a PDO instance
 
@@ -22,18 +26,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
+<?php /* header.php opened the document and left #mainContent open */ ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camagru</title>
-    <link rel="stylesheet" href="../public/assets/css/user.css">
-    <!-- <script src="../public/assets/js/script.js"></script>  -->
-
-</head>
-<body>
     <!-- Overlay -->
     <div id="page-container">
         <div id="sticker-gallery" class="sticker-gallery">
@@ -57,8 +51,15 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php endforeach; ?>
         </div>
-    </div>
+        </div>
 
+    </div> <!-- close mainContent opened in header.php -->
+
+    <footer id="mainFooter">
+        <div class="header">
+            <p>&copy; 2026 Camagru. All rights reserved.</p>
+        </div>
+    </footer>
 
 
 

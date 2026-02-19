@@ -39,6 +39,6 @@ if ($new_password !== '') {
 }
 
 // Redirect back with success message
-header("Location: user_page.php");
+header("Location: gallery.php");
 $_SESSION['succes'] = "Profile updated";
 exit();

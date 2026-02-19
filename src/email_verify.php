@@ -40,7 +40,7 @@ function verify_email() {
     $mail->addAddress($email);
     $mail->Subject = "Verify your Email";
     $mail->Body = <<<END
-Click <a href="http://localhost/camagru/src/token_verify.php?token=$token">here</a> to verify your mail.
+Click <a href="http://localhost:8000/src/token_verify.php?token=$token">here</a> to verify your mail.
 END;
 
     try {

@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// var_dump($_SERVER["REQUEST_METHOD"] );
+// exit();
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $username = $_POST['username'];
@@ -20,6 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
+        // var_dump("user not found: $username");
+        // exit();
         // Optional: do not reveal if username exists for security
         // We just silently continue
         header("Location: ../public/index.php");
@@ -38,9 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mail->addAddress($email);
     $mail->Subject = "Password Reset";
     $mail->Body = <<<END
-Click <a href="http://localhost/camagru/src/reset-password.php?token=$token">here</a> to reset your password.
+Click <a href="http://localhost:8000/src/reset-password.php?token=$token">here</a> to reset your password.
 END;
-
+    
     try {
         $mail->send();
     } catch(Exception $e) {

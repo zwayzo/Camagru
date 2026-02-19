@@ -31,6 +31,6 @@ $stmt = $pdo->prepare("UPDATE users SET enable = ? WHERE id = ?");
 $stmt->execute([$new_enable, $user_id]);
 
 // Optional: redirect back
-header("Location: user_page.php");
+header("Location: gallerie.php");
 exit();
 ?>

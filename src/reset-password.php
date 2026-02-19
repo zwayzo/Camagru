@@ -4,7 +4,7 @@ require_once "../src/errors.php"; // adjust path as needed
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-session_start(); // Make sure session is started
+// session_start(); // Make sure session is started
 
 if (!isset($_GET["token"])) {
     die("No token provided");

@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
+$mysqli = require "../config/database.php";
 
-if ($conn) {
-    echo "Database connected successfully!";
+$result = $mysqli->query("SELECT 1");
+if ($result) {
+    echo "Connected to database successfully!";
 } else {
-    echo "Database connection failed!";
+    echo "Error: " . $mysqli->error;
 }
-?>
