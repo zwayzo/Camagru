@@ -7,11 +7,11 @@ error_reporting(E_ALL);
 include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit();
 }
-$userId = $_SESSION['user_id']; // authenticated user ID
-$pdo = require '../config/database.php'; // assuming this returns a PDO instance
+$userId = $_SESSION['user_id'];
+$pdo = require '../config/database.php'; 
 
 $sql = "
 SELECT id, image_path, created_at
@@ -26,9 +26,8 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<?php /* header.php opened the document and left #mainContent open */ ?>
+<?php  ?>
 
-    <!-- Overlay -->
     <div id="page-container">
         <div id="sticker-gallery" class="sticker-gallery">
             <img src="../public/assets/stickers/sticker1.png" alt="sticker1" />
@@ -53,20 +52,13 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         </div>
 
-    </div> <!-- close mainContent opened in header.php -->
+    </div> 
 
     <footer id="mainFooter">
         <div class="header">
             <p>&copy; 2026 Camagru. All rights reserved.</p>
         </div>
     </footer>
-
-
-
-
-
-
-<!-- prevent XSS attacks -->
 
 <script src="../public/assets/js/script.js" defer></script> 
 

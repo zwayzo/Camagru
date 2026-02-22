@@ -1,8 +1,5 @@
 <?php
-// session_start();
-
 function sendEmail($image_id, $pdo, $action, $text) {
-    // Fetch image and user info
     $sql = "SELECT images.*, users.email, users.enable
             FROM images
             JOIN users ON images.user_id = users.id
@@ -12,12 +9,10 @@ function sendEmail($image_id, $pdo, $action, $text) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        // Image not found, just exit
         header("Location: gallerie.php");
         exit();
     }
 
-    // If notifications are disabled, redirect
     if ($user['enable'] == 0){
         header("Location: gallerie.php");
         exit();

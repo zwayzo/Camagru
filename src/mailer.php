@@ -22,4 +22,3 @@ $mail->isHtml(true);
 return $mail;
 
 ?>
-<!-- qnfl hvvx jory mxqr -->

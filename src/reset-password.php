@@ -1,10 +1,9 @@
 <?php
-require_once "../src/errors.php"; // adjust path as needed
+require_once "../src/errors.php"; 
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// session_start(); // Make sure session is started
 
 if (!isset($_GET["token"])) {
     die("No token provided");
@@ -18,7 +17,6 @@ if (isset($_SESSION["reset_error"])) {
 $token = $_GET["token"];
 $token_hash = hash("sha256", $token);
 
-// PDO connection
 $pdo = require '../config/database.php';
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE reset_token = ?");

@@ -1,11 +1,7 @@
 <?php
-// config/setup.php
-// General setup for the application
 
-// Start session
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+echo "Setup script started...\n";
+
 
 // Enable full error reporting
 ini_set('display_errors', 1);
@@ -16,7 +12,6 @@ error_reporting(E_ALL);
 $pdo = require __DIR__ . '/database.php';
 
 try {
-    // USERS table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,7 +27,6 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ");
 
-    // IMAGES table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS images (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,7 +37,6 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ");
 
-    // LIKES table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS likes (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +49,6 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ");
 
-    // COMMENTS table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS comments (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,5 +66,3 @@ try {
     die("Error creating tables: " . $e->getMessage());
 }
 
-// Optional: load global functions or classes
-// require_once __DIR__ . '/../src/functions.php';

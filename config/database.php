@@ -1,11 +1,10 @@
 <?php
-// database.php
 
-$host = '127.0.0.1';
+$host = 'db';
 $db   = 'camagru_db';
 $user = 'root';
 $pass = 'root123';
-$port = 3307; // your Docker-mapped port
+$port = 3306; 
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";

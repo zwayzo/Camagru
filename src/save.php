@@ -15,21 +15,17 @@ if (!isset($_POST["imageData"])) {
 
 $data = $_POST["imageData"];
 
-// Remove base64 header
-// exit();
+
 $data = str_replace("data:image/png;base64,", "", $data);
 $data = str_replace(" ", "+", $data);
 
 $imageData = base64_decode($data);
 
-// Create unique filename
 $filename = uniqid() . ".png";
 $filepath = "../public/assets/img/" . $filename;
 
-// Save file
 file_put_contents($filepath, $imageData);
 
-// Insert into database
 $stmt = $pdo->prepare("INSERT INTO images (user_id, image_path, created_at)
                        VALUES (?, ?, NOW())");
 

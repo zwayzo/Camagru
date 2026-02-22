@@ -1,0 +1,20 @@
+FROM php:8.2-cli
+
+# Install required extensions
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy project files
+COPY . .
+
+# Ensure the setup script is executable
+RUN chmod +x config/setup.php
+
+# Expose PHP dev server port
+EXPOSE 8000
+
+# Run setup script then PHP server
+# Use the absolute path to be 100% certain
+CMD ["sh", "-c", "php /var/www/html/config/setup.php && php -S 0.0.0.0:8000 -t /var/www/html"]

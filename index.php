@@ -1,9 +1,7 @@
 <?php
-session_start();
-require_once "../src/errors.php"; // adjust path as needed
+// session_start();
+require_once "src/errors.php"; 
 
-// var_dump($_SESSION['register_error']);
-// exit();
 $successMessage = $_SESSION['succes'] ?? $_SESSION['email_verified'] ??  $_SESSION['VF'] ?? '';
 $failMessage = $_SESSION['register_error'] ?? $_SESSION['login_error'] ?? '';
 unset($_SESSION['success']);
@@ -12,15 +10,6 @@ unset($_SESSION['register_error']);
 unset($_SESSION['login_error']);
 unset($_SESSION['VF']);
 
-// var_dump($successMessage);
-// exit();
-
-
-
-
-
-// var_dump($successMessage);
-// exit();
 
 ?>
 
@@ -31,9 +20,8 @@ unset($_SESSION['VF']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/user.css">
-    <!-- <script src="./assets/js/script.js"></script>  -->
+    <link rel="stylesheet" href="public/assets/css/style.css">
+    <link rel="stylesheet" href="public/assets/css/user.css">
 
 </head>
 
@@ -43,9 +31,8 @@ unset($_SESSION['VF']);
             <p id="flash-message" class="success-message"><?= htmlspecialchars($successMessage) ?></p>
         <?php endif; ?>
 
-        <!-- LOGIN FORM -->
         <div class="form-box <?= isActiveForm('login', $activeForm); ?>" id="login-form">
-            <form action="../src/login_register.php" method="post">
+            <form action="src/login_register.php" method="post">
                 <h2>Login</h2>
                 <?= showError($errors['login']); ?>
 
@@ -56,22 +43,19 @@ unset($_SESSION['VF']);
 
                 <p>Don't have an account? <a href="#" onclick="showForm(`register-form`)">Register</a></p>
                 <p>Forget Password? <a href="#" onclick="showMail(); return false;">Send link via email</a></p>
-                <a href="../src/gallerie.php" class="text-link" >View Gallerie</a>
+                <a href="src/gallerie.php" class="text-link" >View Gallerie</a>
             </form>
 
-            <!-- FORGOT PASSWORD FORM (separate form, initially hidden) -->
-            <form id="forgot-form" action="../src/forgot_password.php" method="post" style="<?= $forgotFormStyle ?>">
+            <form id="forgot-form" action="src/forgot_password.php" method="post" style="<?= $forgotFormStyle ?>">
                 <?= showError($errors['reset_error']); ?>
                 <input type="text" id="user-username" name="username" placeholder="Enter your username" required>
                 <button type="submit">Send</button>
             </form>
 
-            <!-- <p id="success-message" style="color: green; display: none;">Email sent successfully!</p> -->
         </div>
 
-        <!-- REGISTER FORM -->
         <div class="form-box <?= isActiveForm('register', $activeForm); ?>" id="register-form">
-            <form action="../src/login_register.php" method="post">
+            <form action="src/login_register.php" method="post">
                 <h2>Register</h2>
                 <?= showError($errors['register']); ?>
 
@@ -82,16 +66,15 @@ unset($_SESSION['VF']);
                 <button type="submit" name="register">Register</button>
 
                 <p>Already have an account? <a href="#" onclick="showForm(`login-form`)">Login</a></p>
-                <a href="../src/gallerie.php" class="text-link" >View Gallerie</a>
+                <a href="src/gallerie.php" class="text-link" >View Gallerie</a>
             </form>
         </div>
 
     </div>
 
-    <script src="assets/js/script.js"></script>
+    <script src="public/assets/js/script.js"></script>
 </body>
 <?php
-// session_unset();
 
 ?>
 </html>

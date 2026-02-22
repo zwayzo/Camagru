@@ -5,13 +5,13 @@ ini_set('display_errors', 1);
 
 if (!isset($_POST["token"])) {
     $_SESSION["reset_error"] = "Invalid request.";
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit();
 }
 
 $token = $_POST["token"];
 $token_hash = hash("sha256", $token);
-$pdo = require '../config/database.php'; // PDO instance
+$pdo = require '../config/database.php'; 
 
 $password = $_POST["password"];
 $password_confirmation = $_POST["password_confirmation"];
@@ -22,24 +22,22 @@ if ($password !== $password_confirmation) {
     exit();
 }
 
-// Fetch user by reset token
 $stmt = $pdo->prepare("SELECT * FROM users WHERE reset_token = ?");
 $stmt->execute([$token_hash]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     $_SESSION["reset_error"] = "Invalid token.";
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit();
 }
 
 if (strtotime($user["token_expiry"]) <= time()) {
     $_SESSION["reset_error"] = "Token expired.";
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit();
 }
 
-// Password validation
 if (!preg_match('/[@#$%!]/', $password)) {
     $_SESSION["reset_error"] = "Password must contain a special character.";
     header("Location: reset-password.php?token=" . urlencode($token));
@@ -58,10 +56,8 @@ if (strlen($password) < 8) {
     exit();
 }
 
-// Hash the new password
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-// Update password and clear token
 $stmt = $pdo->prepare("
     UPDATE users
     SET password = ?, reset_token = NULL, token_expiry = NULL
@@ -70,5 +66,5 @@ $stmt = $pdo->prepare("
 $stmt->execute([$password_hash, $user["id"]]);
 
 $_SESSION["reset_success"] = "Password successfully reset.";
-header("Location: ../public/index.php");
+header("Location: ../index.php");
 exit();

@@ -1,5 +1,4 @@
 <?php
-// session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -11,10 +10,8 @@ function verify_email() {
     $token_hash = hash("sha256", $token);
     $expiry = date("Y-m-d H:i:s", time() + 60 * 30);
 
-    // Connect using PDO
     $pdo = require '../config/database.php';
 
-    // Fetch user
     $sql = "SELECT * FROM users WHERE username = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$username]);
@@ -23,18 +20,16 @@ function verify_email() {
     if (!$user) {
         $_SESSION["identify_error"] = "The user isn't logged";
         sleep(2);
-        header("Location: ../public/index.php");
+        header("Location: ../index.php");
         exit();
     }
 
     $email = $user['email'];
 
-    // Update token in database
     $sql = "UPDATE users SET mail_token = ?, token_expiry = ? WHERE email = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$token_hash, $expiry, $email]);
 
-    // Send mail
     require __DIR__ . "/mailer.php";
     $mail->setFrom("noreply@example.com");
     $mail->addAddress($email);
@@ -46,11 +41,10 @@ END;
     try {
         $mail->send();
     } catch(Exception $e) {
-        // log error but don't reveal sensitive info to user
         error_log("Mailer error: {$mail->ErrorInfo}");
     }
 
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit();
 }
 ?>
