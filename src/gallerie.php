@@ -1,4 +1,3 @@
-
 <?php
 include 'header.php';  
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -58,6 +57,7 @@ $totalPages = ceil($totalImages / $limit);
                         <?php endif; ?>
                     </form>
 
+                    <!-- Comment Button (toggles the comment section) -->
                     <?php if ($user != null): ?>
                         <button class="comment-btn" onclick="toggleCommentsSection(<?= $img['id'] ?>)">
                             💬 <?= $img['comment_count'] ?? 0 ?>
@@ -74,14 +74,17 @@ $totalPages = ceil($totalImages / $limit);
                 <?php endif; ?>
                 </div>
                 
+                <!-- Comment Section (form + existing comments) -->
                 <div class="comments-section" id="comments-section-<?= $img['id'] ?>" style="display:none;">
     
+                    <!-- Add new comment -->
                     <form method="post" action="comment.php">
                         <input type="hidden" name="image_id" value="<?= htmlspecialchars($img['id']) ?>">
                         <input type="text" name="comment" placeholder="Add a comment..." required>
                         <button type="submit">Post</button>
                     </form>
 
+                    <!-- Existing comments -->
                     <div class="comments-list">
                         <?php
                         $stmt = $pdo->prepare("

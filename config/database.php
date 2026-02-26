@@ -1,10 +1,11 @@
 <?php
 
-$host = 'db';
-$db   = 'camagru_db';
-$user = 'root';
-$pass = 'root123';
-$port = 3306; 
+
+$host = getenv('DB_HOST') ?: '127.0.0.1';
+$db   = getenv('DB_NAME') ?: 'camagru_db';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root123';
+$port = getenv('DB_PORT') ?: 3306; 
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";

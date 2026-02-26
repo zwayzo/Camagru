@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 require "../vendor/autoload.php";
 
 $mail = new PHPMailer(true);
-$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+$mail->SMTPDebug = SMTP::DEBUG_OFF; 
 $mail->isSMTP();
 $mail->SMTPAuth = true;
 
@@ -21,4 +21,3 @@ $mail->isHtml(true);
 
 return $mail;
 
-?>

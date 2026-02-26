@@ -1,49 +1,42 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  db:
-    image: mariadb:12
-    container_name: camagru-db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: camagru_db
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+  web:
+    build: .
     ports:
-      - "3307:3306"
+      - "8081:80"
     volumes:
-      - db_data:/var/lib/mysql
-
-  php:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    container_name: camagru-app
-    ports:
-      - "8000:8000"
+      - ./:/var/www/html:cached
     depends_on:
       - db
     environment:
-      DB_HOST: db
-      DB_NAME: camagru_db
-      DB_USER: root
-      DB_PASS: root123
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=camagru_db
+      - RUN_SETUP=1
+      - DB_USER=root
+      - DB_PASS=root123
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: camagru_db
     volumes:
-      - .:/var/www/html
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: camagru-pma
-    restart: always
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
     ports:
-      - "8081:80"
+      - "8082:80"
     environment:
       PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
     depends_on:
       - db
 

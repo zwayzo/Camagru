@@ -25,6 +25,7 @@ $new_enable = ($user['enable'] == 1) ? 0 : 1;
 
 $stmt = $pdo->prepare("UPDATE users SET enable = ? WHERE id = ?");
 $stmt->execute([$new_enable, $user_id]);
+
 header("Location: gallerie.php");
 exit();
 ?>

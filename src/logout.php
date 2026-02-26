@@ -3,13 +3,24 @@ session_start();
 
 
 
+
+
+
+
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['username'])) {
     header("Location: ../index.php");
     exit();
 }
 
+
+
+
+
+
 $_SESSION = [];
 session_destroy();
+
+
 
 
 if (ini_get("session.use_cookies")) {
@@ -24,6 +35,16 @@ if (ini_get("session.use_cookies")) {
         $params["httponly"]
     );
 }
+
+
+
+
+
+
+
+
+
+
 
 header("Location: ../index.php");
 exit();

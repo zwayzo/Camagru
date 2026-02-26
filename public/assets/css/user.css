@@ -160,18 +160,20 @@ body {
 
 .header-actions {
     display: flex;
-    gap: 15px; 
+    gap: 15px; /* space between buttons */
 }
 
 .header form {
-    margin: 0; 
+    margin: 0; /* remove default form spacing */
 }
 
+/* Blur background */
 .blur {
     filter: blur(5px);
     pointer-events: none;
 }
 
+/* Dark overlay */
 .overlay {
     position: fixed;
     inset: 0;
@@ -180,6 +182,7 @@ body {
     z-index: 10;
 }
 
+/* Modal box */
 .modal {
     position: fixed;
     top: 50%;
@@ -205,6 +208,7 @@ body {
     filter: blur(5px);
 }
 
+/* From Uiverse.io by garerim */ 
 .input {
     margin: 30px;
     background: none;
@@ -234,6 +238,7 @@ body {
 
 }
 
+/* Gallery container */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -241,6 +246,7 @@ body {
   padding: 20px;
 }
 
+/* Each card */
 .image-card {
   background: white;
   border-radius: 12px;
@@ -253,11 +259,13 @@ body {
   transform: translateY(-5px);
 }
 
+/* Image */
 .image-card img {
   width: 100%;
   display: block;
 }
 
+/* Info section */
 .image-info {
   padding: 10px;
   font-size: 14px;
@@ -377,14 +385,17 @@ canvas {
   margin-top: 15px;
 }
 
+
+
+
 .sticker-gallery {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
-  gap: 10px;              
+  flex-direction: column; /* vertical stack */
+  align-items: center;    /* center stickers horizontally */
+  gap: 10px;              /* spacing between stickers */
   padding: 10px;
   border: 1px solid #ccc;
-  width: 100px;          
+  width: 100px;           /* fixed width for sidebar */
 }
 
 .sticker-gallery img {
@@ -406,11 +417,11 @@ canvas {
 }
 
 #sticker-gallery {
-  flex-shrink: 0; 
+  flex-shrink: 0; /* prevent it from shrinking */
 }
 
 #main-section {
-  flex-grow: 1; 
+  flex-grow: 1; /* main content takes remaining space */
 }
 
 
@@ -424,11 +435,11 @@ canvas {
 
 .thumbnails {
   display: flex;
-  flex-direction: column; 
-  gap: 10px;              
-  width: 180px;            
-  flex-shrink: 0;          
-  align-items: center;      
+  flex-direction: column; /* stack thumbnails vertically */
+  gap: 10px;              /* spacing between images */
+  width: 180px;            /* fixed width for sidebar */
+  flex-shrink: 0;          /* prevent shrinking */
+  align-items: center;      /* center images inside sidebar */
   border: 1px solid #ccc;
   padding: 10px;
 }
@@ -454,9 +465,10 @@ canvas {
   text-decoration: underline;
 }
 
+/* Footer styling */
 #mainFooter {
-    background-color: #222;       
-    color: #fff;                 
+    background-color: #222;       /* dark footer */
+    color: #fff;                  /* white text */
     padding: 20px 0;
     text-align: center;
     font-family: Arial, sans-serif;
@@ -469,6 +481,7 @@ canvas {
     flex: 1;
 }
 
+/* Footer styling */
 #mainFooter {
     position: fixed;
     bottom: 0;
@@ -484,14 +497,14 @@ canvas {
 
 
 #mainFooter a {
-    color: #7494ec;               
+    color: #7494ec;               /* match accent */
     text-decoration: none;
     margin: 0 10px;
     transition: color 0.3s;
 }
 
 #mainFooter a:hover {
-    color: #4a6cc9;               
+    color: #4a6cc9;               /* slightly darker on hover */
 }
 
 .footer-links {
@@ -499,7 +512,7 @@ canvas {
 }
 
 #page-container {
-    padding-bottom: 80px; 
+    padding-bottom: 80px; /* same height as footer */
 }
 
 
@@ -531,8 +544,11 @@ canvas {
 }
 
 
+/* =============================================
+   RESPONSIVE — mobile fixes (base design unchanged)
+   ============================================= */
 
-
+/* ------ Header: wrap buttons on smaller screens ------ */
 @media (max-width: 900px) {
     .header {
         flex-wrap: wrap;
@@ -546,6 +562,7 @@ canvas {
         width: 100%;
     }
 
+    /* Keep pill shape but allow buttons to shrink */
     .header-actions .verify-email-btn,
     .header-actions .verify-email-btn2 {
         height: 40px;
@@ -556,6 +573,7 @@ canvas {
         max-width: 100%;
     }
 
+    /* Forms inside header (enable/logout) must not stretch weirdly */
     .header form {
         flex: 1 1 auto;
         display: flex;
@@ -565,6 +583,7 @@ canvas {
         width: 100%;
     }
 
+    /* Upload section inline */
     #upload-section {
         flex: 1 1 auto;
         display: flex;
@@ -579,8 +598,10 @@ canvas {
     }
 }
 
+/* ------ user_page.php: stack the 3-column layout ------ */
 @media (max-width: 768px) {
 
+    /* Stack: sticker sidebar → webcam → thumbnails */
     #page-container {
         flex-direction: column;
         align-items: center;
@@ -589,6 +610,7 @@ canvas {
         width: 100%;
     }
 
+    /* Sticker gallery: horizontal strip */
     #sticker-gallery {
         width: 100%;
     }
@@ -607,6 +629,7 @@ canvas {
         height: 50px;
     }
 
+    /* Webcam: full width */
     #webcam-section {
         width: 100%;
         align-items: stretch;
@@ -622,11 +645,13 @@ canvas {
         margin-top: 8px;
     }
 
+    /* Canvas */
     canvas {
         width: 100% !important;
         height: auto !important;
     }
 
+    /* Thumbnails: horizontal wrapping row */
     .thumbnails {
         flex-direction: row;
         flex-wrap: wrap;
@@ -647,27 +672,32 @@ canvas {
         text-align: center;
     }
 
+    /* Gallery: single column */
     .gallery {
         grid-template-columns: 1fr;
         padding: 10px;
         gap: 12px;
     }
 
+    /* Modal: nearly full screen */
     .modal {
         width: 92%;
         padding: 20px;
     }
 
+    /* Comments input */
     .comments-section input {
         width: 62%;
     }
 
+    /* Footer */
     #mainFooter {
         padding: 12px 15px;
         font-size: 12px;
     }
 }
 
+/* ------ Small phones ------ */
 @media (max-width: 480px) {
 
     .header h1 {

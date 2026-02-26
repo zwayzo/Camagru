@@ -1,22 +1,26 @@
 <?php
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
 $pdo = require '../config/database.php';
 
-// session_start();
 
 $successMessage = $_SESSION['succes'] ?? null;
 unset($_SESSION['succes']);
 
+
 $user = null;
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
+    
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
 
 $sql = "
 SELECT 
@@ -55,6 +59,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <h1>Camagru</h1>
 
             <div class="header-actions">
+                <!-- Always visible -->
                 <?php if ($user == null): ?>
                     <a href="../index.php" class="verify-email-btn">Return to login</a>
                 <?php else: ?>
@@ -62,6 +67,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
 
                 <?php if ($user != null): ?>
+                    <!-- Visible only to logged-in users -->
                     <a href="user_page.php" class="verify-email-btn">Take a pic</a>
 
                     <div id="upload-section">
@@ -97,6 +103,19 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <form action="logout.php" method="post">
                         <button type="submit" class="verify-email-btn">Logout</button>
                     </form>
+                    <!-- <div id="overlay" class="overlay"></div>
+                    <div id="editModal" class="modal">
+                        <div class="modal-content">
+                            <h2>Edit Profile</h2>
+                            <form action="edit_profile.php" method="post">
+                                <input type="text" name="username" placeholder="New username">
+                                <input type="email" name="email" placeholder="New email">
+                                <input type="text" name="password" placeholder="New password">
+                                <button type="submit">Save</button>
+                                <button type="button" onclick="closeModal()">Cancel</button>
+                            </form>
+                        </div>
+                    </div> -->
                 <?php endif; ?>
             </div>
         </div>
@@ -122,6 +141,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </body>
 
+    <!-- mainContent remains open; page templates should render content here, then close the mainContent div and include the footer -->
 
 
 

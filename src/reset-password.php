@@ -5,6 +5,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 
+
 if (!isset($_GET["token"])) {
     die("No token provided");
 }
@@ -16,6 +17,7 @@ if (isset($_SESSION["reset_error"])) {
 
 $token = $_GET["token"];
 $token_hash = hash("sha256", $token);
+
 
 $pdo = require '../config/database.php';
 

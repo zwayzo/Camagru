@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
-$userId = $_SESSION['user_id'];
+$userId = $_SESSION['user_id']; 
 $pdo = require '../config/database.php'; 
 
 $sql = "
@@ -28,6 +28,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php  ?>
 
+    <!-- Overlay -->
     <div id="page-container">
         <div id="sticker-gallery" class="sticker-gallery">
             <img src="../public/assets/stickers/sticker1.png" alt="sticker1" />
@@ -52,13 +53,20 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         </div>
 
-    </div> 
+    </div> <!-- close mainContent opened in header.php -->
 
     <footer id="mainFooter">
         <div class="header">
             <p>&copy; 2026 Camagru. All rights reserved.</p>
         </div>
     </footer>
+
+
+
+
+
+
+<!-- prevent XSS attacks -->
 
 <script src="../public/assets/js/script.js" defer></script> 
 

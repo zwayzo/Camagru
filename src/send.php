@@ -1,5 +1,8 @@
 <?php
+
+
 function sendEmail($image_id, $pdo, $action, $text) {
+    
     $sql = "SELECT images.*, users.email, users.enable
             FROM images
             JOIN users ON images.user_id = users.id
@@ -9,10 +12,12 @@ function sendEmail($image_id, $pdo, $action, $text) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
+        
         header("Location: gallerie.php");
         exit();
     }
 
+    
     if ($user['enable'] == 0){
         header("Location: gallerie.php");
         exit();
@@ -29,7 +34,7 @@ function sendEmail($image_id, $pdo, $action, $text) {
 
     
 
-    // Send email
+    
     require __DIR__ . "/mailer.php";
     $mail->setFrom("noreply@example.com");
     $mail->addAddress($email);
@@ -39,7 +44,7 @@ function sendEmail($image_id, $pdo, $action, $text) {
         $mail->Body = <<<END
         Hi,<br>
         You have a new $action.<br>
-        $current said: "$text".<br><br><br><br>
+        $test said: "$text".<br><br><br><br>
         Thanks, The Camagru Team<br><br>
         END;
     } else {

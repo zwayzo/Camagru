@@ -1,4 +1,4 @@
-// console.log("js ")
+
 let isCaptured = false;
 
 
@@ -10,7 +10,7 @@ function showForm(formId) {
 }
 
 
-// script.js
+
 function showMail() {
     document.getElementById("login-form").querySelector("form").style.display = "none";
     document.getElementById("forgot-form").style.display = "block";
@@ -41,8 +41,8 @@ function sendEmail() {
 function openModal() {
     document.getElementById("editModal").style.display = "block";
     document.getElementById("overlay").style.display = "block";
-    document.getElementById("mainContent").classList.add("blur"); // blur only the main content
-    document.getElementById("gallery").classList.add("blur"); // blur only the main content
+    document.getElementById("mainContent").classList.add("blur"); 
+    document.getElementById("gallery").classList.add("blur"); 
 }
 
 function closeModal() {
@@ -97,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let baseImage = new Image();
     let stickers = [];
 
-    // REDRAW CANVAS
+    
+    
+    
     function redrawCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -116,7 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RESIZE FUNCTION
+    
+    
+    
     function resizeCanvas(img) {
         const MAX = 600;
         let width = img.width;
@@ -134,7 +138,9 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = height;
     }
 
-    // UPLOAD IMAGE
+    
+    
+    
     uploadBtn.addEventListener("click", () => fileInput.click());
 
     fileInput.addEventListener("change", (e) => {
@@ -157,8 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.readAsDataURL(file);
     });
 
-    // START WEBCAM
+    
+    
+    
     function startWebcam() {
+        
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.warn("getUserMedia is not supported in this browser.");
             return;
@@ -173,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(stream => {
                 try {
                     webcamVideo.srcObject = stream;
+                    
                     webcamVideo.play().catch(() => {});
 
                     if (captureBtn) {
@@ -188,7 +198,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startWebcam();
 
-    // CAPTURE
+    
+    
+    
     if (captureBtn){
         captureBtn.addEventListener("click", () => {
             if (!webcamVideo.videoWidth) return;
@@ -211,7 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ADD STICKERS (MULTIPLE)
+    
+    
+    
     const stickerElements = document.querySelectorAll("#sticker-gallery img");
 
     stickerElements.forEach(sticker => {
@@ -225,9 +239,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const stickerWidth = canvas.width * 0.3;
                 const stickerHeight = img.height * (stickerWidth / img.width);
     
+                
                 const x = Math.random() * (canvas.width - stickerWidth);
                 const y = Math.random() * (canvas.height - stickerHeight);
     
+                
                 stickers.push({
                     img: img,
                     x: x,
@@ -245,13 +261,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
 
-    // SAVE BUTTON
+    
+    
+    
     saveBtn.addEventListener("click", () => {
         const imageData = canvas.toDataURL("image/png");
         console.log("Send this to PHP:", imageData);
     });
 
-    // FORM SUBMIT
+    
+    
+    
     form.addEventListener("submit", () => {
         imageInput.value = canvas.toDataURL("image/png");
     });

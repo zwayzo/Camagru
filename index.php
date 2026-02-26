@@ -2,6 +2,8 @@
 // session_start();
 require_once "src/errors.php"; 
 
+
+
 $successMessage = $_SESSION['succes'] ?? $_SESSION['email_verified'] ??  $_SESSION['VF'] ?? '';
 $failMessage = $_SESSION['register_error'] ?? $_SESSION['login_error'] ?? '';
 unset($_SESSION['success']);
@@ -9,6 +11,15 @@ unset($_SESSION['email_verified']);
 unset($_SESSION['register_error']);
 unset($_SESSION['login_error']);
 unset($_SESSION['VF']);
+
+
+
+
+
+
+
+
+
 
 
 ?>
@@ -22,6 +33,7 @@ unset($_SESSION['VF']);
     <title>Camagru</title>
     <link rel="stylesheet" href="public/assets/css/style.css">
     <link rel="stylesheet" href="public/assets/css/user.css">
+    <!-- <script src="./assets/js/script.js"></script>  -->
 
 </head>
 
@@ -31,6 +43,7 @@ unset($_SESSION['VF']);
             <p id="flash-message" class="success-message"><?= htmlspecialchars($successMessage) ?></p>
         <?php endif; ?>
 
+        <!-- LOGIN FORM -->
         <div class="form-box <?= isActiveForm('login', $activeForm); ?>" id="login-form">
             <form action="src/login_register.php" method="post">
                 <h2>Login</h2>
@@ -46,14 +59,17 @@ unset($_SESSION['VF']);
                 <a href="src/gallerie.php" class="text-link" >View Gallerie</a>
             </form>
 
+            <!-- FORGOT PASSWORD FORM (separate form, initially hidden) -->
             <form id="forgot-form" action="src/forgot_password.php" method="post" style="<?= $forgotFormStyle ?>">
                 <?= showError($errors['reset_error']); ?>
                 <input type="text" id="user-username" name="username" placeholder="Enter your username" required>
                 <button type="submit">Send</button>
             </form>
 
+            <!-- <p id="success-message" style="color: green; display: none;">Email sent successfully!</p> -->
         </div>
 
+        <!-- REGISTER FORM -->
         <div class="form-box <?= isActiveForm('register', $activeForm); ?>" id="register-form">
             <form action="src/login_register.php" method="post">
                 <h2>Register</h2>
@@ -75,6 +91,7 @@ unset($_SESSION['VF']);
     <script src="public/assets/js/script.js"></script>
 </body>
 <?php
+
 
 ?>
 </html>

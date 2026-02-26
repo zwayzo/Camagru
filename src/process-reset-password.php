@@ -22,6 +22,7 @@ if ($password !== $password_confirmation) {
     exit();
 }
 
+
 $stmt = $pdo->prepare("SELECT * FROM users WHERE reset_token = ?");
 $stmt->execute([$token_hash]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -37,6 +38,7 @@ if (strtotime($user["token_expiry"]) <= time()) {
     header("Location: ../index.php");
     exit();
 }
+
 
 if (!preg_match('/[@#$%!]/', $password)) {
     $_SESSION["reset_error"] = "Password must contain a special character.";
@@ -56,7 +58,9 @@ if (strlen($password) < 8) {
     exit();
 }
 
+
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
 
 $stmt = $pdo->prepare("
     UPDATE users

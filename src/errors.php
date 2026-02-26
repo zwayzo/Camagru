@@ -10,6 +10,7 @@ $errors = [
 
 $activeForm = $_SESSION['active_form'] ?? 'login';
 
+
 $forgotFormStyle = !empty($errors['reset_error']) 
     ? 'display: block; margin-top: 10px;' 
     : 'display: none; margin-top: 10px;';

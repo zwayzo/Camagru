@@ -6,7 +6,6 @@ error_reporting(E_ALL);
 
 require "./send.php";
 $pdo = require '../config/database.php';
-require_once '../config/setup.php';
 
 if (!isset($_SESSION['user_id'])) {
     die("You must be logged in to comment an image.");
@@ -26,6 +25,11 @@ if ($image_id <= 0) {
 
 $stmt = $pdo->prepare("INSERT INTO comments (user_id, image_id, comment, created_at) VALUES (?, ?, ?, NOW())");
 $stmt->execute([$user_id, $image_id, $comment]);
+
+
+// var_dump($user['username']);
+// exit();
+
 
 if ($user['enable'] == 1){
     sendEmail($image_id, $pdo, "comment", $comment);

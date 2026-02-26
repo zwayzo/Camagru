@@ -13,7 +13,9 @@ if (!isset($_GET["token"])) {
 $token = $_GET["token"];
 $token_hash = hash("sha256", $token);
 
+
 $pdo = require '../config/database.php';
+
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE mail_token = ?");
 $stmt->execute([$token_hash]);
@@ -25,11 +27,13 @@ if (!$user){
     exit();
 }
 
+
 if (strtotime($user["token_expiry"]) <= time()){
     $_SESSION["reset_error"] = "Token expired.";
     header("Location: ../index.php");
     exit();
 }
+
 
 $update = $pdo->prepare("UPDATE users SET is_verified = 1 WHERE id = ?");
 $update->execute([$user['id']]);

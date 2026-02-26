@@ -1,0 +1,5 @@
+docker compose up -d --build \
+  && until docker compose exec db mysql -uroot -proot123 -e 'SELECT 1' >/dev/null 2>&1; do sleep 1; done \
+  && docker compose exec web php /var/www/html/config/setup.php
+
+chmod 777 public/assets/img

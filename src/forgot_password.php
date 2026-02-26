@@ -23,12 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    $email = $user['email']; // now we have the email
+    $email = $user['email']; 
 
     $stmt = $pdo->prepare("UPDATE users SET reset_token = ?, token_expiry = ? WHERE username = ?");
     $stmt->execute([$token_hash, $expiry, $username]);
 
-    require __DIR__ . "/mailer.php"; // PHPMailer instance
+    require __DIR__ . "/mailer.php"; 
     $mail->setFrom("noreply@example.com");
     $mail->addAddress($email);
     $mail->Subject = "Password Reset";
@@ -42,7 +42,7 @@ END;
         error_log("Mailer error: {$mail->ErrorInfo}");
     }
 
-    echo "If this username exists, a reset link has been sent.";
+    // echo "If this username exists, a reset link has been sent.";
 }
 
 header("Location: ../index.php");
