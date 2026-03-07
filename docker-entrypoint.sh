@@ -1,3 +1,4 @@
+#!/bin/bash
 
 set -e
 
@@ -12,10 +13,12 @@ until php -r "try { new PDO('mysql:host=$DB_HOST;port=$DB_PORT', getenv('DB_USER
   sleep 1
 done
 
-if [ "${RUN_SETUP:-1}" = "1" ]; then
-  echo "Running config/setup.php..."
-  php /var/www/html/config/setup.php || true
-fi
+echo "Running config/setup.php..."
+php /var/www/html/config/setup.php 
+
+chmod 777 /var/www/html/public/assets/img
+echo "Giving permissions to store images"
+
 
 echo "Starting Apache..."
 exec docker-php-entrypoint apache2-foreground
