@@ -25,7 +25,7 @@ $filename = uniqid() . ".png";
 $absDir = __DIR__ . '/../public/assets/img';
 $absPath = $absDir . '/' . $filename;
 $dbPath = '../public/assets/img/' . $filename; // path used in templates (relative from src/)
-
+chmod($absDir, 0755);
 // Ensure directory exists and is writable
 if (!is_dir($absDir)) {
     if (!mkdir($absDir, 0755, true) && !is_dir($absDir)) {
